@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RoWebVideoGames.Data;
 
@@ -11,9 +12,10 @@ using RoWebVideoGames.Data;
 namespace RoWebVideoGames.Migrations
 {
     [DbContext(typeof(VideoGamesContext))]
-    partial class VideoGamesContextModelSnapshot : ModelSnapshot
+    [Migration("20220606114720_AddReview")]
+    partial class AddReview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,7 +63,7 @@ namespace RoWebVideoGames.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("GamesId")
+                    b.Property<int?>("GamesId")
                         .HasColumnType("int");
 
                     b.Property<string>("Username")
@@ -69,7 +71,23 @@ namespace RoWebVideoGames.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GamesId");
+
                     b.ToTable("Review");
+                });
+
+            modelBuilder.Entity("RoWebVideoGames.Models.Review", b =>
+                {
+                    b.HasOne("RoWebVideoGames.Models.Games", "Games")
+                        .WithMany("Reviews")
+                        .HasForeignKey("GamesId");
+
+                    b.Navigation("Games");
+                });
+
+            modelBuilder.Entity("RoWebVideoGames.Models.Games", b =>
+                {
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

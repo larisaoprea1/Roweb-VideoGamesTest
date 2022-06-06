@@ -49,9 +49,32 @@ namespace RoWebVideoGames.Controllers
                 return NotFound();
             }
 
-            return View(games);
+            return View(new GameReview(games, (from g in _context.Review
+                                               where g.GamesId.Equals(games.Id)
+                                               select g).ToList()));
         }
+        public async Task<IActionResult> AddReview(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var movie = await _context.Games.FindAsync(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            _context.Review.Add(new Review()
+            {
+                Username = Request.Form["reviewName"],
+                Content = Request.Form["reviewText"],
+                Date = DateTime.Now,
+                GamesId = (int)id
+            });
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), "Games", new { id = id });
+        }
         // GET: Games/Create
         public IActionResult Create()
         {

@@ -15,5 +15,7 @@ namespace RoWebVideoGames.Data
         }
 
         public DbSet<RoWebVideoGames.Models.Games>? Games { get; set; }
+
+        public DbSet<RoWebVideoGames.Models.Review>? Review { get; set; }
     }
 }
